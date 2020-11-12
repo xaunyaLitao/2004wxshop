@@ -76,7 +76,7 @@ Route::get('/coupon/get','CouponController@getCoupon')->middleware('check.login'
 Route::post('/coupon/test','CouponController@test');
 
 
-Route::any('/wx','WxController@index');       //接入
+Route::any('/weixin','WxController@index');       //接入
 
 //微信
 Route::prefix('/wx')->group(function(){
