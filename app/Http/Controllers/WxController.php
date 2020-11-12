@@ -90,7 +90,7 @@ class WxController extends Controller
                                 "subscribe_time" => $user["subscribe_time"],
                                 "subscribe_scene" => $user["subscribe_scene"]
                             ];
-                            UserModel::insert($res);
+                            WxUserModel::insert($res);
                             $content="谢谢关注@！";
                         }
                     }
@@ -263,7 +263,7 @@ class WxController extends Controller
     }
 
 
-    
+
     private function writeLog($data){
         if(is_object($data) || is_array($data)){   //不管是数据和对象都转json 格式
             $data=json_encode($data);
