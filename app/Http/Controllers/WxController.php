@@ -17,7 +17,7 @@ class WxController extends Controller
         $echostr = $request->echostr;
         $result = $this->checkSignature();
         if($result){
-            echo $echostr;
+            echo $echostr;die;
         }else{
             return false;
         }
