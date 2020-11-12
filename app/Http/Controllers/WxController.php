@@ -158,7 +158,7 @@ class WxController extends Controller
                 $url = "https://api.weixin.qq.com/cgi-bin/media/get?access_token=" . $token . "&media_id=" . $media_id;
                 $img = file_get_contents($url);
                 file_put_contents("cat.jpg", $img);
-                return true;
+//                return true;
                 break;
 
             //   语音
@@ -203,7 +203,7 @@ class WxController extends Controller
                 $url = "https://api.weixin.qq.com/cgi-bin/media/get?access_token=" . $token . "&media_id=" . $media_id;
                 $video = file_get_contents($url);
                 file_put_contents("li.mp4", $video);
-                return true;
+//                return true;
                 break;
 
 
