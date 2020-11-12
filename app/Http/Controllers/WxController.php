@@ -236,7 +236,9 @@ class WxController extends Controller
 //
 //                    break;
         }
-                echo "";
+                $content="尚未开发";
+
+          echo   $this->xiaoxi($content,$obj);
     }
 
 
