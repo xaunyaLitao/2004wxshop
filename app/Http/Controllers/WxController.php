@@ -157,8 +157,8 @@ class WxController extends Controller
                 $media_id = ($data['media_id']);
                 $url = "https://api.weixin.qq.com/cgi-bin/media/get?access_token=" . $token . "&media_id=" . $media_id;
                 $img = file_get_contents($url);
-                $res = file_put_contents("cat.jpg", $img);
-                return $res;
+                file_put_contents("cat.jpg", $img);
+                return true;
                 break;
 
             //   语音
@@ -181,7 +181,7 @@ class WxController extends Controller
                 $url = "https://api.weixin.qq.com/cgi-bin/media/get?access_token=" . $token . "&media_id=" . $media_id;
                 $voice = file_get_contents($url);
                 file_put_contents("la.amr", $voice);
-                $content = "正确";
+                return true;
                 break;
 
             //  视频
@@ -197,12 +197,13 @@ class WxController extends Controller
                 ];
                 HistoryModel::insert($data);
 
-//                        下载语音
+//                        下载视频
                 $token = $this->get_access_token();
                 $media_id = $data['media_id'];
                 $url = "https://api.weixin.qq.com/cgi-bin/media/get?access_token=" . $token . "&media_id=" . $media_id;
                 $video = file_get_contents($url);
                 file_put_contents("li.mp4", $video);
+                return true;
                 break;
 
 
@@ -238,9 +239,6 @@ class WxController extends Controller
 //
 //                    break;
         }
-        $content = "尚未开发";
-
-        echo $this->xiaoxi($obj,$content);
 }
 
 
