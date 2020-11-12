@@ -46,24 +46,24 @@ class WxController extends Controller
     /**
      * 验证请求是否来自微信
      */
-    private function check()
-    {
-        $signature = $_GET["signature"];
-        $timestamp = $_GET["timestamp"];
-        $nonce = $_GET["nonce"];
+    // private function check()
+    // {
+    //     $signature = $_GET["signature"];
+    //     $timestamp = $_GET["timestamp"];
+    //     $nonce = $_GET["nonce"];
 
-        $token = env('WX_TOKEN');
-        $tmpArr = array($token, $timestamp, $nonce);
-        sort($tmpArr, SORT_STRING);
-        $tmpStr = implode( $tmpArr );
-        $tmpStr = sha1( $tmpStr );
+    //     $token = env('WX_TOKEN');
+    //     $tmpArr = array($token, $timestamp, $nonce);
+    //     sort($tmpArr, SORT_STRING);
+    //     $tmpStr = implode( $tmpArr );
+    //     $tmpStr = sha1( $tmpStr );
 
-        if( $tmpStr == $signature ){
-            return true;
-        }else{
-            return false;
-        }
-    }
+    //     if( $tmpStr == $signature ){
+    //         return true;
+    //     }else{
+    //         return false;
+    //     }
+    // }
 
     /**
      * 处理推送事件
