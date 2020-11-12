@@ -208,36 +208,36 @@ class WxController extends Controller
 
 
 
-//                        case "签到";
-//                        if($obj->Event=="CLICK") {
-//                            if ($obj->EventKey == "Li") {
-//                                $key = $obj->FromUserName;
-//                                $times = date("Y-m-d", time());
-//                                $date = Redis::zrange($key, 0, -1);
-//                                if ($date) {
-//                                    $date = $date[0];
-//                                }
-//
-//                                if ($date == $times) {
-//                                    $content = "您今日已经签到过了!";
-//                                } else {
-//                                    $zcard = Redis::zcard($key);
-//                                    if ($zcard >= 1) {
-//                                        Redis::zremrangebyrank($key, 0, 0);
-//                                    }
-//                                    $keys = array_xml($str);
-//                                    $keys = $keys['FromUserName'];
-//                                    $zincrby = Redis::zincrby($key, 1, $keys);
-//                                    $zadd = Redis::zadd($key, $zincrby, $times);
-//
-//                                    $score = Redis::incrby($keys . "_score", 100);
-//
-//                                    $content = "签到成功您以积累签到" . $zincrby . "天!" . "您以积累获得" . $score . "积分";
-//                                }
-//                            }
-//                        }
-//
-//                    break;
+                        case "签到";
+                        if($obj->Event=="CLICK") {
+                            if ($obj->EventKey == "Li") {
+                                $key = $obj->FromUserName;
+                                $times = date("Y-m-d", time());
+                                $date = Redis::zrange($key, 0, -1);
+                                if ($date) {
+                                    $date = $date[0];
+                                }
+
+                                if ($date == $times) {
+                                    $content = "您今日已经签到过了!";
+                                } else {
+                                    $zcard = Redis::zcard($key);
+                                    if ($zcard >= 1) {
+                                        Redis::zremrangebyrank($key, 0, 0);
+                                    }
+                                    $keys = array_xml($str);
+                                    $keys = $keys['FromUserName'];
+                                    $zincrby = Redis::zincrby($key, 1, $keys);
+                                    $zadd = Redis::zadd($key, $zincrby, $times);
+
+                                    $score = Redis::incrby($keys . "_score", 100);
+
+                                    $content = "签到成功您以积累签到" . $zincrby . "天!" . "您以积累获得" . $score . "积分";
+                                }
+                            }
+                        }
+
+                    break;
         }
 
         echo $this->xiaoxi($obj,$content);
