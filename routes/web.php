@@ -76,10 +76,10 @@ Route::get('/coupon/get','CouponController@getCoupon')->middleware('check.login'
 Route::post('/coupon/test','CouponController@test');
 
 
-Route::any('/weixin','WxController@index');       //接入
 
 //微信
 Route::prefix('/wx')->group(function(){
+    Route::get('/','WxController@echostr');
     Route::post('/','WxController@wxEvent');
     Route::get('/token','WxController@getAccessToken');        //获取access_token
     Route::get('/create_menu','WxController@createMenu');        //创建菜单

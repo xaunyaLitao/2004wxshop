@@ -13,6 +13,15 @@ class WxController extends Controller
 
     protected $xml_obj;
 
+    public function echostr(Request $request){
+        $echostr = $request->echostr;
+        $result = $this->checkSignature();
+        if($result){
+            echo echostr;
+        }else{
+            return false;
+        }
+    }
 
   //    事件推送
   public function index(){
