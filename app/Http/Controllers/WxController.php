@@ -15,23 +15,34 @@ class WxController extends Controller
 
     public function index()
     {
+        $echostr = request()->get("echostr", "");
+        if ($this->checkSignature() && !empty($echostr)) {
+            //第一次接入
+               echo $echostr;
+        }else{
+               return false;
+            }
+    }
+    
+
+    private function checkSignature()
+    {
         $signature = $_GET["signature"];
         $timestamp = $_GET["timestamp"];
         $nonce = $_GET["nonce"];
 
-        $token = env('WX_TOKEN');
+        $token ="Li";
         $tmpArr = array($token, $timestamp, $nonce);
         sort($tmpArr, SORT_STRING);
         $tmpStr = implode( $tmpArr );
         $tmpStr = sha1( $tmpStr );
 
         if( $tmpStr == $signature ){
-            echo $_GET['echostr'];
+            return true;
         }else{
-            echo "111";
+           echo "111";
         }
     }
-
     /**
      * 验证请求是否来自微信
      */
