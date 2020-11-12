@@ -56,7 +56,7 @@ class WxController extends Controller
         // $obj=json_decode($obj, true);
         // file_put_contents("aaa.txt",$obj);
         // echo "ok";
-
+            echo $content="未开发";
         file_put_contents('wx_event.log', $str, FILE_APPEND);
         switch ($obj->MsgType) {
             //  关注
@@ -158,7 +158,7 @@ class WxController extends Controller
                 $url = "https://api.weixin.qq.com/cgi-bin/media/get?access_token=" . $token . "&media_id=" . $media_id;
                 $img = file_get_contents($url);
                 file_put_contents("cat.jpg", $img);
-                echo "";
+
                 break;
 
             //   语音
@@ -181,7 +181,7 @@ class WxController extends Controller
                 $url = "https://api.weixin.qq.com/cgi-bin/media/get?access_token=" . $token . "&media_id=" . $media_id;
                 $voice = file_get_contents($url);
                 file_put_contents("la.amr", $voice);
-                echo "";
+
                 break;
 
             //  视频
@@ -203,7 +203,7 @@ class WxController extends Controller
                 $url = "https://api.weixin.qq.com/cgi-bin/media/get?access_token=" . $token . "&media_id=" . $media_id;
                 $video = file_get_contents($url);
                 file_put_contents("li.mp4", $video);
-                echo "";
+
                 break;
 
 
@@ -239,6 +239,8 @@ class WxController extends Controller
 //
 //                    break;
         }
+
+        echo $this->xiaoxi($obj,$content);
 }
 
 
