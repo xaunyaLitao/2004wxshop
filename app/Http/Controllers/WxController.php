@@ -6,7 +6,7 @@ use App\Model\WxUserModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use GuzzleHttp\Client;
-use App\Model\WxMediaModel;
+use App\Model\UserModel;
 
 class WxController extends Controller
 {
@@ -20,7 +20,9 @@ class WxController extends Controller
             //第一次接入
                echo $echostr;
         }else{
-               return false;
+            $str=file_get_contents("php://input");
+            $obj = simplexml_load_string($str,"SimpleXMLElement",LIBXML_NOCDATA);
+            file_put_contents('wx_event.log',$str,FILE_APPEND);
             }
     }
     
