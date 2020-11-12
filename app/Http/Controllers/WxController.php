@@ -239,6 +239,31 @@ class WxController extends Controller
     }
 
 
+    function xiaoxi($obj,$content){ //返回消息
+        //我们可以恢复一个文本|图片|视图|音乐|图文列如文本
+        //接收方账号
+        $toUserName=$obj->FromUserName;
+        //开发者微信号
+        $fromUserName=$obj->ToUserName;
+        //时间戳
+        $time=time();
+        //返回类型
+        $msgType="text";
+
+        $xml = "<xml>
+                      <ToUserName><![CDATA[%s]]></ToUserName>
+                      <FromUserName><![CDATA[%s]]></FromUserName>
+                      <CreateTime>%s</CreateTime>
+                      <MsgType><![CDATA[%s]]></MsgType>
+                      <Content><![CDATA[%s]]></Content>
+                    </xml>";
+        //替换掉上面的参数用 sprintf
+        echo sprintf($xml,$toUserName,$fromUserName,$time,$msgType,$content);
+
+    }
+
+
+    
     private function writeLog($data){
         if(is_object($data) || is_array($data)){   //不管是数据和对象都转json 格式
             $data=json_encode($data);
