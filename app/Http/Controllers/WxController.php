@@ -13,12 +13,14 @@ class WxController extends Controller
 
     protected $xml_obj;
 
-    public function echostr(Request $request){
+    public function echostr(Request $request)
+    {
         $echostr = $request->echostr;
         $result = $this->checkSignature();
-        if($result){
-            echo $echostr;die;
-        }else{
+        if ($result) {
+            echo $echostr;
+            die;
+        } else {
             return false;
         }
     }
@@ -30,55 +32,55 @@ class WxController extends Controller
         $timestamp = $_GET["timestamp"];
         $nonce = $_GET["nonce"];
 
-        $token =env('WX_TOKEN');
+        $token = env('WX_TOKEN');
         $tmpArr = array($token, $timestamp, $nonce);
         sort($tmpArr, SORT_STRING);
-        $tmpStr = implode( $tmpArr );
-        $tmpStr = sha1( $tmpStr );
+        $tmpStr = implode($tmpArr);
+        $tmpStr = sha1($tmpStr);
 
-        if( $tmpStr == $signature ){
+        if ($tmpStr == $signature) {
             return true;
-        }else{
-           return false;
+        } else {
+            return false;
         }
     }
-  
+
 
     /**
      * 处理推送事件
      */
     public function wxEvent()
     {
-        $str=file_get_contents("php://input");
-        $obj = simplexml_load_string($str,"SimpleXMLElement",LIBXML_NOCDATA);
+        $str = file_get_contents("php://input");
+        $obj = simplexml_load_string($str, "SimpleXMLElement", LIBXML_NOCDATA);
         // $obj=json_decode($obj, true);
         // file_put_contents("aaa.txt",$obj);
         // echo "ok";
 
-        file_put_contents('wx_event.log',$str,FILE_APPEND);
-        switch($obj->MsgType){
+        file_put_contents('wx_event.log', $str, FILE_APPEND);
+        switch ($obj->MsgType) {
             //  关注
             case "event":
-                if($obj->Event=="subscribe"){
+                if ($obj->Event == "subscribe") {
                     //用户扫码的 openID
-                    $openid=$obj->FromUserName;//获取发送方的 openid
-                    $access_token=$this->get_access_token();//获取token
-                    $url="https://api.weixin.qq.com/cgi-bin/user/info?access_token=".$access_token."&openid=".$openid."&lang=zh_CN";
+                    $openid = $obj->FromUserName;//获取发送方的 openid
+                    $access_token = $this->get_access_token();//获取token
+                    $url = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=" . $access_token . "&openid=" . $openid . "&lang=zh_CN";
                     //掉接口
-                    $user=file_get_contents($url);
-                    $user=json_decode($user,true);//跳方法 用get  方式调第三方类库
+                    $user = file_get_contents($url);
+                    $user = json_decode($user, true);//跳方法 用get  方式调第三方类库
                     // $this->writeLog($fens);
-                    if(isset($user["errcode"])){
+                    if (isset($user["errcode"])) {
                         $this->writeLog("获取用户信息失败");
-                    }else{
+                    } else {
                         //查数据库有这个用户没有
-                        $user_id=WxUserModel::where('openid',$openid)->first();
-                        if($user_id){
-                            $user_id->subscribe=1;
+                        $user_id = WxUserModel::where('openid', $openid)->first();
+                        if ($user_id) {
+                            $user_id->subscribe = 1;
                             $user_id->save();
-                            $content="谢谢再次回来！";
-                        }else{
-                            $res=[
+                            $content = "谢谢再次回来！";
+                        } else {
+                            $res = [
                                 "subscribe" => $user['subscribe'],
                                 "openid" => $user["openid"],
                                 "nickname" => $user["nickname"],
@@ -92,115 +94,115 @@ class WxController extends Controller
                                 "subscribe_scene" => $user["subscribe_scene"]
                             ];
                             WxUserModel::insert($res);
-                            $content="谢谢关注@！";
+                            $content = "谢谢关注@！";
                         }
                     }
                 }
                 // 取消关注
-                if($obj->Event=="unsubscribe"){
-                    $user_id->subscribe=0;
+                if ($obj->Event == "unsubscribe") {
+                    $user_id->subscribe = 0;
                     $user_id->save();
                 }
-                echo $this->xiaoxi($obj,$content);
+                echo $this->xiaoxi($obj, $content);
                 break;
 
             case "text";
                 //  天气
-                $city=urlencode(str_replace("天气:","",$obj->Content));   //城市
-                $key="50ad65400349c7a71553ab6b23b92acb";  //key
-                $url="http://apis.juhe.cn/simpleWeather/query?city=".$city."&key=".$key;  //url地址
-                $shuju=file_get_contents($url);
-                $shuju=json_decode($shuju,true);
-                if($shuju["error_code"]==0){
-                    $today=$shuju["result"]["realtime"];
-                    $content="查询天气的城市:".$shuju["result"]["city"]."当天天气"."/n";  //查询的城市
-                    $content.="天气详细情况：".$today["info"];
-                    $content.="温度：".$today["temperature"]."\n";
-                    $content.="湿度：".$today["humidity"]."\n";
-                    $content.="风向：".$today["direct"]."\n";
-                    $content.="风力：".$today["power"]."\n";
-                    $content.="空气质量指数：".$today["aqi"]."\n";
+                $city = urlencode(str_replace("天气:", "", $obj->Content));   //城市
+                $key = "50ad65400349c7a71553ab6b23b92acb";  //key
+                $url = "http://apis.juhe.cn/simpleWeather/query?city=" . $city . "&key=" . $key;  //url地址
+                $shuju = file_get_contents($url);
+                $shuju = json_decode($shuju, true);
+                if ($shuju["error_code"] == 0) {
+                    $today = $shuju["result"]["realtime"];
+                    $content = "查询天气的城市:" . $shuju["result"]["city"] . "当天天气" . "/n";  //查询的城市
+                    $content .= "天气详细情况：" . $today["info"];
+                    $content .= "温度：" . $today["temperature"] . "\n";
+                    $content .= "湿度：" . $today["humidity"] . "\n";
+                    $content .= "风向：" . $today["direct"] . "\n";
+                    $content .= "风力：" . $today["power"] . "\n";
+                    $content .= "空气质量指数：" . $today["aqi"] . "\n";
                     //获取一个星期的
-                    $future=$shuju["result"]["future"];
-                    foreach($future as $k=>$v){
-                        $content.="日期:".date("Y-m-d",strtotime($v["date"])).$v['temperature'].",";
-                        $content.="天气:".$v['weather']."\n";
+                    $future = $shuju["result"]["future"];
+                    foreach ($future as $k => $v) {
+                        $content .= "日期:" . date("Y-m-d", strtotime($v["date"])) . $v['temperature'] . ",";
+                        $content .= "天气:" . $v['weather'] . "\n";
                     }
 
-                }else{
-                    $content="你的查询天气失败，你的格式是天气:城市,这个城市不属于中国";
+                } else {
+                    $content = "你的查询天气失败，你的格式是天气:城市,这个城市不属于中国";
                 }
 
-                echo $this->xiaoxi($obj,$content);
+                echo $this->xiaoxi($obj, $content);
                 break;
 
 
             //    图片
             case "image";
 //                        file_put_contents('image.log',$str);
-                $data=[
-                    'tousername'=>$obj->ToUserName,
-                    'openid'=>$obj->FromUserName,
-                    'createtime'=>$obj->CreateTime,
-                    'msgtype'=>$obj->MsgType,
-                    'pricurl'=>$obj->PicUrl,
-                    'msgid'=>$obj->MsgId,
-                    'media_id'=>$obj->MediaId
+                $data = [
+                    'tousername' => $obj->ToUserName,
+                    'openid' => $obj->FromUserName,
+                    'createtime' => $obj->CreateTime,
+                    'msgtype' => $obj->MsgType,
+                    'pricurl' => $obj->PicUrl,
+                    'msgid' => $obj->MsgId,
+                    'media_id' => $obj->MediaId
                 ];
                 HistoryModel::insert($data);
 
 
 //                      下载图片
-                $token=$this->get_access_token();
-                $media_id=($data['media_id']);
-                $url="https://api.weixin.qq.com/cgi-bin/media/get?access_token=".$token."&media_id=".$media_id;
+                $token = $this->get_access_token();
+                $media_id = ($data['media_id']);
+                $url = "https://api.weixin.qq.com/cgi-bin/media/get?access_token=" . $token . "&media_id=" . $media_id;
                 $img = file_get_contents($url);
-                $res=file_put_contents("cat.jpg",$img);
+                $res = file_put_contents("cat.jpg", $img);
                 return $res;
                 break;
 
             //   语音
             case "voice";
 //                        file_put_contents("2004.txt",$str);
-                $data=[
-                    'tousername'=>$obj->ToUserName,
-                    'openid'=>$obj->FromUserName,
-                    'createtime'=>$obj->CreateTime,
-                    'msgtype'=>$obj->MsgType,
-                    'msgid'=>$obj->MsgId,
-                    'media_id'=>$obj->MediaId
+                $data = [
+                    'tousername' => $obj->ToUserName,
+                    'openid' => $obj->FromUserName,
+                    'createtime' => $obj->CreateTime,
+                    'msgtype' => $obj->MsgType,
+                    'msgid' => $obj->MsgId,
+                    'media_id' => $obj->MediaId
                 ];
                 HistoryModel::insert($data);
 
 
 //                        下载语音
-                $token=$this->get_access_token();
-                $media_id=$data['media_id'];
-                $url="https://api.weixin.qq.com/cgi-bin/media/get?access_token=".$token."&media_id=".$media_id;
+                $token = $this->get_access_token();
+                $media_id = $data['media_id'];
+                $url = "https://api.weixin.qq.com/cgi-bin/media/get?access_token=" . $token . "&media_id=" . $media_id;
                 $voice = file_get_contents($url);
-                file_put_contents("la.amr",$voice);
+                file_put_contents("la.amr", $voice);
                 $content = "正确";
                 break;
 
             //  视频
             case "video";
-                $data=[
-                    'tousername'=>$obj->ToUserName,
-                    'openid'=>$obj->FromUserName,
-                    'createtime'=>$obj->CreateTime,
-                    'msgtype'=>$obj->MsgType,
-                    'thumbmediaId'=>$obj->thumbmediaId,
-                    'msgid'=>$obj->MsgId,
-                    'media_id'=>$obj->MediaId
+                $data = [
+                    'tousername' => $obj->ToUserName,
+                    'openid' => $obj->FromUserName,
+                    'createtime' => $obj->CreateTime,
+                    'msgtype' => $obj->MsgType,
+                    'thumbmediaId' => $obj->thumbmediaId,
+                    'msgid' => $obj->MsgId,
+                    'media_id' => $obj->MediaId
                 ];
                 HistoryModel::insert($data);
 
 //                        下载语音
-                $token=$this->get_access_token();
-                $media_id=$data['media_id'];
-                $url="https://api.weixin.qq.com/cgi-bin/media/get?access_token=".$token."&media_id=".$media_id;
+                $token = $this->get_access_token();
+                $media_id = $data['media_id'];
+                $url = "https://api.weixin.qq.com/cgi-bin/media/get?access_token=" . $token . "&media_id=" . $media_id;
                 $video = file_get_contents($url);
-                file_put_contents("li.mp4",$video);
+                file_put_contents("li.mp4", $video);
                 break;
 
 
@@ -236,10 +238,10 @@ class WxController extends Controller
 //
 //                    break;
         }
-                $content="尚未开发";
+        $content = "尚未开发";
 
-          echo   $this->xiaoxi($content,$obj);
-    }
+        echo $this->xiaoxi($obj,$content);
+}
 
 
     function xiaoxi($obj,$content){ //返回消息
