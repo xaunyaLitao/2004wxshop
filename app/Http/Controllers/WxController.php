@@ -157,8 +157,8 @@ class WxController extends Controller
                 $media_id = ($data['media_id']);
                 $url = "https://api.weixin.qq.com/cgi-bin/media/get?access_token=" . $token . "&media_id=" . $media_id;
                 $img = file_get_contents($url);
-                $res=file_put_contents("cat.jpg", $img);
-                return $res;
+                file_put_contents("cat.jpg", $img);
+                echo "";
                 break;
 
             //   语音
@@ -180,8 +180,8 @@ class WxController extends Controller
                 $media_id = $data['media_id'];
                 $url = "https://api.weixin.qq.com/cgi-bin/media/get?access_token=" . $token . "&media_id=" . $media_id;
                 $voice = file_get_contents($url);
-                $res=file_put_contents("la.amr", $voice);
-               return $res;
+                file_put_contents("la.amr", $voice);
+                echo "";
                 break;
 
             //  视频
@@ -202,8 +202,8 @@ class WxController extends Controller
                 $media_id = $data['media_id'];
                 $url = "https://api.weixin.qq.com/cgi-bin/media/get?access_token=" . $token . "&media_id=" . $media_id;
                 $video = file_get_contents($url);
-                $res=file_put_contents("li.mp4", $video);
-                return $res;
+                file_put_contents("li.mp4", $video);
+                echo "";
                 break;
 
 
