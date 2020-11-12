@@ -227,104 +227,84 @@ class WxController extends Controller
         if( $tmpStr == $signature ){
             return true;
         }else{
-           echo "111";
+           return false;
         }
     }
-    /**
-     * 验证请求是否来自微信
-     */
-    // private function check()
-    // {
-    //     $signature = $_GET["signature"];
-    //     $timestamp = $_GET["timestamp"];
-    //     $nonce = $_GET["nonce"];
-
-    //     $token = env('WX_TOKEN');
-    //     $tmpArr = array($token, $timestamp, $nonce);
-    //     sort($tmpArr, SORT_STRING);
-    //     $tmpStr = implode( $tmpArr );
-    //     $tmpStr = sha1( $tmpStr );
-
-    //     if( $tmpStr == $signature ){
-    //         return true;
-    //     }else{
-    //         return false;
-    //     }
-    // }
+  
 
     /**
      * 处理推送事件
      */
-    public function wxEvent()
-    {
+//     public function wxEvent()
+//     {
 
-        //验签
-//        if($this->check()==false)
-//        {
-//            //TODO 验签不通过
-//            echo "";
-//            exit;
-//        }
+//         //验签
+// //        if($this->check()==false)
+// //        {
+// //            //TODO 验签不通过
+// //            echo "";
+// //            exit;
+// //        }
 
-        // 1 接收数据
-        $xml_str = file_get_contents("php://input");
-
-
-        // 记录日志
-        $log_str = date('Y-m-d H:i:s') . ' >>>>>  ' . $xml_str ." \n\n";
-        file_put_contents('wx_event.log',$log_str,FILE_APPEND);
-
-        // 将接收来的数据转化为对象
-        $obj = simplexml_load_string($xml_str);//将文件转换成 对象
-        $this->xml_obj = $obj;
-
-        $msg_type = $obj->MsgType;      //推送事件的消息类型
-        switch($msg_type)
-        {
-            case 'event' :
-
-                if($obj->Event=='subscribe')        // subscribe 扫码关注
-                {
-                    echo $this->subscribe();
-                    exit;
-                }elseif($obj->Event=='unsubscribe')     // // unsubscribe 取消关注
-                {
-                    echo "";
-                    exit;
-                }elseif ($obj->Event=='CLICK')          // 菜单点击事件
-                {
-                    $this->clickHandler();
-                    // TODO
-                }elseif($obj->Event=='VIEW')            // 菜单 view点击 事件
-                {
-                    // TODO
-                }
+//         // 1 接收数据
+//         $xml_str = file_get_contents("php://input");
 
 
-                break;
+//         // 记录日志
+//         $log_str = date('Y-m-d H:i:s') . ' >>>>>  ' . $xml_str ." \n\n";
+//         file_put_contents('wx_event.log',$log_str,FILE_APPEND);
 
-            case 'text' :           //处理文本信息
-                $this->textHandler();
-                break;
+//         // 将接收来的数据转化为对象
+//         $obj = simplexml_load_string($xml_str);//将文件转换成 对象
+//         $this->xml_obj = $obj;
 
-            case 'image' :          // 处理图片信息
-                $this->imageHandler();
-                break;
+//         $msg_type = $obj->MsgType;      //推送事件的消息类型
+//         switch($msg_type)
+//         {
+//             case 'event' :
 
-            case 'voice' :          // 语音
-                $this->voiceHandler();
-                break;
-            case 'video' :          // 视频
-                $this->videoHandler();
-                break;
+//                 if($obj->Event=='subscribe')        // subscribe 扫码关注
+//                 {
+//                     echo $this->subscribe();
+//                     exit;
+//                 }elseif($obj->Event=='unsubscribe')     // // unsubscribe 取消关注
+//                 {
+//                     echo "";
+//                     exit;
+//                 }elseif ($obj->Event=='CLICK')          // 菜单点击事件
+//                 {
+//                     $this->clickHandler();
+//                     // TODO
+//                 }elseif($obj->Event=='VIEW')            // 菜单 view点击 事件
+//                 {
+//                     // TODO
+//                 }
 
-            default:
-                echo 'default';
-        }
 
-        echo "";
+//                 break;
 
-    }
+//             case 'text' :           //处理文本信息
+//                 $this->textHandler();
+//                 break;
+
+//             case 'image' :          // 处理图片信息
+//                 $this->imageHandler();
+//                 break;
+
+//             case 'voice' :          // 语音
+//                 $this->voiceHandler();
+//                 break;
+//             case 'video' :          // 视频
+//                 $this->videoHandler();
+//                 break;
+
+//             default:
+//                 echo 'default';
+//         }
+
+//         echo "";
+
+//     }
 
     /**
      * 处理文本消息
