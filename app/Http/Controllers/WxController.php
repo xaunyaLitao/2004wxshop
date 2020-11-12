@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use GuzzleHttp\Client;
 use App\Model\UserModel;
-
+use App\Model\HistoryModel;
 class WxController extends Controller
 {
 
@@ -23,203 +23,6 @@ class WxController extends Controller
         }
     }
 
-  //    事件推送
-//  public function index(){
-//    $echostr = request()->get("echostr", "");
-//    if ($this->checkSignature() && !empty($echostr)) {
-//        //第一次接入
-//        echo $echostr;
-//    }else{
-//        // $access_token=$this->get_access_token();  //跳方法  调 access_token  获取access_token
-//        $str=file_get_contents("php://input");
-//        $obj = simplexml_load_string($str,"SimpleXMLElement",LIBXML_NOCDATA);
-//        // $obj=json_decode($obj, true);
-//        // file_put_contents("aaa.txt",$obj);
-//        // echo "ok";
-//        file_put_contents('wx_event.log',$str,FILE_APPEND);
-//            switch($obj->MsgType){
-//                //  关注
-//                case "event":
-//            if($obj->Event=="subscribe"){
-//                //用户扫码的 openID
-//            $openid=$obj->FromUserName;//获取发送方的 openid
-//            $access_token=$this->get_access_token();//获取token
-//            $url="https://api.weixin.qq.com/cgi-bin/user/info?access_token=".$access_token."&openid=".$openid."&lang=zh_CN";
-//                //掉接口
-//            $user=file_get_contents($url);
-//            $user=json_decode($user,true);//跳方法 用get  方式调第三方类库
-//                // $this->writeLog($fens);
-//            if(isset($user["errcode"])){
-//            $this->writeLog("获取用户信息失败");
-//            }else{
-//            //查数据库有这个用户没有
-//            $user_id=UserModel::where('openid',$openid)->first();
-//            if($user_id){
-//                $user_id->subscribe=1;
-//                $user_id->save();
-//                $content="谢谢再次回来！";
-//            }else{
-//                $res=[
-//                    "subscribe" => $user['subscribe'],
-//                    "openid" => $user["openid"],
-//                    "nickname" => $user["nickname"],
-//                    "sex" => $user["sex"],
-//                    "city" => $user["city"],
-//                    "country" => $user["country"],
-//                    "province" => $user["province"],
-//                    "language" => $user["language"],
-//                    "headimgurl" => $user["headimgurl"],
-//                    "subscribe_time" => $user["subscribe_time"],
-//                    "subscribe_scene" => $user["subscribe_scene"]
-//                ];
-//                UserModel::insert($res);
-//                $content="谢谢关注@！";
-//            }
-//        }
-//    }
-//        // 取消关注
-//        if($obj->Event=="unsubscribe"){
-//            $user_id->subscribe=0;
-//            $user_id->save();
-//        }
-//        echo $this->xiaoxi($obj,$content);
-//        break;
-//
-//                case "text";
-//                    //  天气
-//                    $city=urlencode(str_replace("天气:","",$obj->Content));   //城市
-//                    $key="50ad65400349c7a71553ab6b23b92acb";  //key
-//                    $url="http://apis.juhe.cn/simpleWeather/query?city=".$city."&key=".$key;  //url地址
-//                    $shuju=file_get_contents($url);
-//                    $shuju=json_decode($shuju,true);
-//                    if($shuju["error_code"]==0){
-//                        $today=$shuju["result"]["realtime"];
-//                        $content="查询天气的城市:".$shuju["result"]["city"]."当天天气"."/n";  //查询的城市
-//                        $content.="天气详细情况：".$today["info"];
-//                        $content.="温度：".$today["temperature"]."\n";
-//                        $content.="湿度：".$today["humidity"]."\n";
-//                        $content.="风向：".$today["direct"]."\n";
-//                        $content.="风力：".$today["power"]."\n";
-//                        $content.="空气质量指数：".$today["aqi"]."\n";
-//                        //获取一个星期的
-//                        $future=$shuju["result"]["future"];
-//                        foreach($future as $k=>$v){
-//                            $content.="日期:".date("Y-m-d",strtotime($v["date"])).$v['temperature'].",";
-//                            $content.="天气:".$v['weather']."\n";
-//                        }
-//
-//                    }else{
-//                        $content="你的查询天气失败，你的格式是天气:城市,这个城市不属于中国";
-//                    }
-//
-//                    echo $this->xiaoxi($obj,$content);
-//                    break;
-//
-//
-//                //    图片
-//                case "image";
-////                        file_put_contents('image.log',$str);
-//                  $data=[
-//                      'tousername'=>$obj->ToUserName,
-//                      'openid'=>$obj->FromUserName,
-//                      'createtime'=>$obj->CreateTime,
-//                      'msgtype'=>$obj->MsgType,
-//                      'pricurl'=>$obj->PicUrl,
-//                      'msgid'=>$obj->MsgId,
-//                      'media_id'=>$obj->MediaId
-//                  ];
-//                      HistoryModel::insert($data);
-//
-//
-////                      下载图片
-//                    $token=$this->get_access_token();
-//                    $media_id=($data['media_id']);
-//                    $url="https://api.weixin.qq.com/cgi-bin/media/get?access_token=".$token."&media_id=".$media_id;
-//                    $img = file_get_contents($url);
-//                    $res=file_put_contents("cat.jpg",$img);
-//                   return $res;
-//                    break;
-//
-//                //   语音
-//                case "voice";
-////                        file_put_contents("2004.txt",$str);
-//                    $data=[
-//                        'tousername'=>$obj->ToUserName,
-//                        'openid'=>$obj->FromUserName,
-//                        'createtime'=>$obj->CreateTime,
-//                        'msgtype'=>$obj->MsgType,
-//                        'msgid'=>$obj->MsgId,
-//                        'media_id'=>$obj->MediaId
-//                    ];
-//                    HistoryModel::insert($data);
-//
-//
-////                        下载语音
-//                    $token=$this->get_access_token();
-//                    $media_id=$data['media_id'];
-//                    $url="https://api.weixin.qq.com/cgi-bin/media/get?access_token=".$token."&media_id=".$media_id;
-//                    $voice = file_get_contents($url);
-//                    file_put_contents("la.amr",$voice);
-//                     $content = "正确";
-//                    break;
-//
-//                //  视频
-//                case "video";
-//                    $data=[
-//                        'tousername'=>$obj->ToUserName,
-//                        'openid'=>$obj->FromUserName,
-//                        'createtime'=>$obj->CreateTime,
-//                        'msgtype'=>$obj->MsgType,
-//                        'thumbmediaId'=>$obj->thumbmediaId,
-//                        'msgid'=>$obj->MsgId,
-//                        'media_id'=>$obj->MediaId
-//                    ];
-//                    HistoryModel::insert($data);
-//
-////                        下载语音
-//                    $token=$this->get_access_token();
-//                    $media_id=$data['media_id'];
-//                    $url="https://api.weixin.qq.com/cgi-bin/media/get?access_token=".$token."&media_id=".$media_id;
-//                    $video = file_get_contents($url);
-//                    file_put_contents("li.mp4",$video);
-//                    break;
-//
-//
-//
-////                        case "签到";
-////                        if($obj->Event=="CLICK") {
-////                            if ($obj->EventKey == "Li") {
-////                                $key = $obj->FromUserName;
-////                                $times = date("Y-m-d", time());
-////                                $date = Redis::zrange($key, 0, -1);
-////                                if ($date) {
-////                                    $date = $date[0];
-////                                }
-////
-////                                if ($date == $times) {
-////                                    $content = "您今日已经签到过了!";
-////                                } else {
-////                                    $zcard = Redis::zcard($key);
-////                                    if ($zcard >= 1) {
-////                                        Redis::zremrangebyrank($key, 0, 0);
-////                                    }
-////                                    $keys = array_xml($str);
-////                                    $keys = $keys['FromUserName'];
-////                                    $zincrby = Redis::zincrby($key, 1, $keys);
-////                                    $zadd = Redis::zadd($key, $zincrby, $times);
-////
-////                                    $score = Redis::incrby($keys . "_score", 100);
-////
-////                                    $content = "签到成功您以积累签到" . $zincrby . "天!" . "您以积累获得" . $score . "积分";
-////                                }
-////                            }
-////                        }
-////
-////                    break;
-//                  }
-//            }
-//    }
-    
 
     private function checkSignature()
     {
@@ -268,7 +71,7 @@ class WxController extends Controller
                         $this->writeLog("获取用户信息失败");
                     }else{
                         //查数据库有这个用户没有
-                        $user_id=UserModel::where('openid',$openid)->first();
+                        $user_id=WxUserModel::where('openid',$openid)->first();
                         if($user_id){
                             $user_id->subscribe=1;
                             $user_id->save();

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class WxUserModel extends Model
 {
-    protected $table = 'p_wx_users';
+    protected $table = 'user';
+    protected $primaryKey="user_id";
     public $timestamps = false;
 }
