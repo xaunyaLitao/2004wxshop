@@ -181,7 +181,7 @@ class WxController extends Controller
                 $url = "https://api.weixin.qq.com/cgi-bin/media/get?access_token=" . $token . "&media_id=" . $media_id;
                 $voice = file_get_contents($url);
                 file_put_contents("la.amr", $voice);
-                return true;
+//                return true;
                 break;
 
             //  视频
