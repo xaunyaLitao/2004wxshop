@@ -85,6 +85,6 @@ Route::prefix('/wx')->group(function(){
     Route::get('/create_menu','WxController@createMenu');        //创建菜单
     Route::get('/upload_media','WxController@uploadMedia');        //上传素材
     Route::get('/send_all','WxController@sendAll');         //群发消息
-
+    Route::get('/create_menus','WxController@createMenus');
 });
 
