@@ -6,7 +6,6 @@ use App\Model\WxUserModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use GuzzleHttp\Client;
-use App\Model\UserModel;
 use App\Model\HistoryModel;
 class WxController extends Controller
 {
@@ -132,7 +131,7 @@ class WxController extends Controller
 
                 // 取消关注
                 if ($obj->Event == "unsubscribe") {
-                    $user_id->subscribe = 0;
+                    $user_id->subscribe =0;
                     $user_id->save();
                 }
                 echo $this->xiaoxi($obj, $content);
@@ -650,14 +649,27 @@ class WxController extends Controller
 
         $menu=[
             'button'=>[
-                "name"=>2004,
-                "sub_button"=> [
-                    [
-                        'type'  =>'click',
-                        'name'  =>'WX2004',
-                        'key'   =>'k_wx_2004'
+               [
+                   "name"=>2004,
+                    "sub_button"=> [
+                        [
+                            'type'  =>'click',
+                            'name'  =>'签到',
+                            'key'   =>'Li'
+                        ],
+                        [
+                            'type'=>'view',
+                            'name'=>'拼多多',
+                            'url'=>"https://www.pinduoduo.com"
+                        ]
+                ]
+               ],
 
-                    ],
+
+
+            [
+                "name"=>"菜单",
+                "sub_button"=>[
                     [
                         'type'  =>'view',
                         'name'  =>'百度',
@@ -667,14 +679,22 @@ class WxController extends Controller
                         'type'  =>'view',
                         'name'  =>'京东',
                         'url'   =>'https://www.jd.com'
-                    ],
-                    [
-                        'type'  =>'click',
-                        'name'  =>'签到',
-                        'key'   =>'Li'
-
                     ]
                 ]
+            ],
+
+             [
+                 "name"=>"菜单3",
+                 "sub_button"=>[
+                     [
+                         'type'=>'view',
+                         'name'=>"淘宝",
+                         'url'=>"https://www.taobao.com"
+                     ]
+                 ]
+             ]
+
+
             ]
         ];
 
