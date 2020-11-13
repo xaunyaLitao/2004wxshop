@@ -56,7 +56,7 @@ class WxController extends Controller
         // $obj=json_decode($obj, true);
         // file_put_contents("aaa.txt",$obj);
         // echo "ok";
-             $content="未完善";
+//             $content="未完善";
         file_put_contents('wx_event.log', $str, FILE_APPEND);
         switch ($obj->MsgType) {
             //  关注
@@ -236,11 +236,11 @@ class WxController extends Controller
                                 }
                             }
                         }
-                            echo $this->xiaoxi($obj,$content);
+
                     break;
         }
 
-        echo $this->xiaoxi($obj,$content);
+//        echo $this->xiaoxi($obj,$content);
 
 }
 
