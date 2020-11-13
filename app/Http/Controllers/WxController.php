@@ -98,6 +98,8 @@ class WxController extends Controller
                         }
                     }
                 }
+
+
                 // 取消关注
                 if ($obj->Event == "unsubscribe") {
                     $user_id->subscribe = 0;
