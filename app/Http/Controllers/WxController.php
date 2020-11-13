@@ -75,7 +75,7 @@ class WxController extends Controller
                 if ($zcard >= 1) {
                     Redis::zremrangebyrank($key, 0, 0);
                 }
-                $keys = array_xml($str);
+                $keys = $this->array_xml($str);
                 $keys = $keys['FromUserName'];
                 $zincrby = Redis::zincrby($key, 1, $keys);
                 $zadd = Redis::zadd($key, $zincrby, $times);
