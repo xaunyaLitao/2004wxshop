@@ -451,82 +451,82 @@ class WxController extends Controller
     /**
      * 创建自定义菜单
      */
-    public function createMenu()
-    {
-        $access_token = $this->getAccessToken();
-        $url = 'https://api.weixin.qq.com/cgi-bin/menu/create?access_token='.$access_token;
-
-        $menu = [
-            'button'    => [
-                [
-                    'type'  => 'view',
-                    'name'  => '商城',
-                    'url'   => 'http://2004shop.comcto.com'
-                ],
-                [
-                    'name'          => '二级菜单',
-                    'sub_button'    => [
-                        [
-                            'type'  => 'click',
-                            'name'  => '签到',
-                            'key'   => 'checkin'
-                        ],
-                        [
-                            'type'  => 'pic_photo_or_album',
-                            'name'  => '传图',
-                            'key'   => 'uploadimg'
-                        ],
-                        [
-                            'type'  => 'click',
-                            'name'  => '天气',
-                            'key'   => 'weather'
-                        ]
-                    ]
-                ],
-
-            ]
-        ];
-
-        //使用guzzle发起 POST 请求
-        $client = new Client();         //实例化 客户端
-        $response = $client->request('POST',$url,[
-            'verify'    => false,
-            'body'  => json_encode($menu,JSON_UNESCAPED_UNICODE)
-        ]);
-
-        $json_data = $response->getBody();
-
-        //判断接口返回
-        $info = json_decode($json_data,true);
-
-        if($info['errcode'] > 0)        //判断错误码
-        {
-            // TODO 处理错误
-            echo '<pre>';print_r($info);echo '</pre>';
-        }else{
-            // TODO 创建菜单成功逻辑
-            echo date("Y-m-d H:i:s").  "创建菜单成功";
-        }
-
-
-
-    }
+//    public function createMenu()
+//    {
+//        $access_token = $this->getAccessToken();
+//        $url = 'https://api.weixin.qq.com/cgi-bin/menu/create?access_token='.$access_token;
+//
+//        $menu = [
+//            'button'    => [
+//                [
+//                    'type'  => 'view',
+//                    'name'  => '商城',
+//                    'url'   => 'http://2004shop.comcto.com'
+//                ],
+//                [
+//                    'name'          => '二级菜单',
+//                    'sub_button'    => [
+//                        [
+//                            'type'  => 'click',
+//                            'name'  => '签到',
+//                            'key'   => 'checkin'
+//                        ],
+//                        [
+//                            'type'  => 'pic_photo_or_album',
+//                            'name'  => '传图',
+//                            'key'   => 'uploadimg'
+//                        ],
+//                        [
+//                            'type'  => 'click',
+//                            'name'  => '天气',
+//                            'key'   => 'weather'
+//                        ]
+//                    ]
+//                ],
+//
+//            ]
+//        ];
+//
+//        //使用guzzle发起 POST 请求
+//        $client = new Client();         //实例化 客户端
+//        $response = $client->request('POST',$url,[
+//            'verify'    => false,
+//            'body'  => json_encode($menu,JSON_UNESCAPED_UNICODE)
+//        ]);
+//
+//        $json_data = $response->getBody();
+//
+//        //判断接口返回
+//        $info = json_decode($json_data,true);
+//
+//        if($info['errcode'] > 0)        //判断错误码
+//        {
+//            // TODO 处理错误
+//            echo '<pre>';print_r($info);echo '</pre>';
+//        }else{
+//            // TODO 创建菜单成功逻辑
+//            echo date("Y-m-d H:i:s").  "创建菜单成功";
+//        }
+//
+//
+//
+//    }
 
 
     /**
      * 下载媒体
      */
-    public function dlMedia()
-    {
-        $token = $this->getAccessToken();
-        $media_id = '2EOz5TyVOVA728B6cETWByk8_w33mS17Ye1e1C6AuAv2SMS7l4R4HoQFl9mmgprw';
-        $url = 'https://api.weixin.qq.com/cgi-bin/media/get?access_token='.$token.'&media_id='.$media_id;
-        echo $url;die;
-        $img = file_get_contents($url);
-        $res = file_put_contents('cat.jpg',$img);
-        var_dump($res);
-
-    }
+//    public function dlMedia()
+//    {
+//        $token = $this->getAccessToken();
+//        $media_id = '2EOz5TyVOVA728B6cETWByk8_w33mS17Ye1e1C6AuAv2SMS7l4R4HoQFl9mmgprw';
+//        $url = 'https://api.weixin.qq.com/cgi-bin/media/get?access_token='.$token.'&media_id='.$media_id;
+//        echo $url;die;
+//        $img = file_get_contents($url);
+//        $res = file_put_contents('cat.jpg',$img);
+//        var_dump($res);
+//
+//    }
 
 
     /**
