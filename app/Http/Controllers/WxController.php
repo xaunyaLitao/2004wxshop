@@ -103,7 +103,7 @@ class WxController extends Controller
                     $user_id->subscribe = 0;
                     $user_id->save();
                 }
-                echo $this->xiaoxi($obj, $content);
+               
                 break;
 
             case "text";
