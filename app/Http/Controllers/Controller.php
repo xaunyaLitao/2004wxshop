@@ -11,6 +11,17 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    //xml格式数据转换成数组函数
+    function array_xml($a){
+
+        $obj = simplexml_load_string($a, "SimpleXMLElement", LIBXML_NOCDATA);
+        $datat = json_decode(json_encode($obj),true);
+        return $datat;
+
+    }
+
+
+
     public function http_get($url){
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);//向那个url地址上面发送
