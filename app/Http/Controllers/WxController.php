@@ -58,42 +58,37 @@ class WxController extends Controller
         // echo "ok";
              $content="正确";
         file_put_contents('wx_event.log', $str, FILE_APPEND);
-        switch ($obj->MsgType) {
 
 
+        if ($obj->EventKey == "Li") {
+            $key = $obj->FromUserName;
+            $times = date("Y-m-d", time());
+            $date = Redis::zrange($key, 0, -1);
+            if ($date) {
+                $date = $date[0];
+            }
 
-            case "签到";
-                if($obj->Event=="CLICK") {
-                    if ($obj->EventKey == "Li") {
-                        $key = $obj->FromUserName;
-                        $times = date("Y-m-d", time());
-                        $date = Redis::zrange($key, 0, -1);
-                        if ($date) {
-                            $date = $date[0];
-                        }
-
-                        if ($date == $times) {
-                            $content = "您今日已经签到过了!";
-                        } else {
-                            $zcard = Redis::zcard($key);
-                            if ($zcard >= 1) {
-                                Redis::zremrangebyrank($key, 0, 0);
-                            }
-                            $keys = array_xml($str);
-                            $keys = $keys['FromUserName'];
-                            $zincrby = Redis::zincrby($key, 1, $keys);
-                            $zadd = Redis::zadd($key, $zincrby, $times);
-
-                            $score = Redis::incrby($keys . "_score", 100);
-
-                            $content = "签到成功您以积累签到" . $zincrby . "天!" . "您以积累获得" . $score . "积分";
-                        }
-                    }
+            if ($date == $times) {
+                $content = "您今日已经签到过了!";
+            } else {
+                $zcard = Redis::zcard($key);
+                if ($zcard >= 1) {
+                    Redis::zremrangebyrank($key, 0, 0);
                 }
+                $keys = array_xml($str);
+                $keys = $keys['FromUserName'];
+                $zincrby = Redis::zincrby($key, 1, $keys);
+                $zadd = Redis::zadd($key, $zincrby, $times);
 
-                break;
+                $score = Redis::incrby($keys . "_score", 100);
+
+                $content = "签到成功您以积累签到" . $zincrby . "天!" . "您以积累获得" . $score . "积分";
+            }
+        }
 
 
+
+        switch ($obj->MsgType) {
             //  关注
             case "event":
                 if ($obj->Event == "subscribe") {
