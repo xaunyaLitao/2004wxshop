@@ -107,7 +107,7 @@ class WxController extends Controller
                         if ($user_id) {
                             $user_id->subscribe = 1;
                             $user_id->save();
-                            $content = "谢谢再次回来！";
+                            $content = "谢谢再次回来,为您提供个人好的服务！";
                         } else {
                             $res = [
                                 "subscribe" => $user['subscribe'],
@@ -123,7 +123,7 @@ class WxController extends Controller
                                 "subscribe_scene" => $user["subscribe_scene"]
                             ];
                             WxUserModel::insert($res);
-                            $content = "谢谢关注@！";
+                            $content = "谢谢关注老铁@！";
                         }
                     }
                 }
