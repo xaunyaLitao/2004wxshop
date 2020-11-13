@@ -623,25 +623,6 @@ class WxController extends Controller
     }
 
 
-    /**
-     * 获取用户基本信息
-     */
-    public function getWxUserInfo()
-    {
-
-        $token = $this->getAccessToken();
-        $openid = $this->xml_obj->FromUserName;
-        $url = 'https://api.weixin.qq.com/cgi-bin/user/info?access_token='.$token.'&openid='.$openid.'&lang=zh_CN';
-
-        //请求接口
-        $client = new Client();
-        $response = $client->request('GET',$url,[
-            'verify'    => false
-        ]);
-        return  json_decode($response->getBody(),true);
-    }
-
-
     //    创建自定义菜单
     public function createMenus(){
         $access_token=$this->get_access_token();
@@ -690,7 +671,13 @@ class WxController extends Controller
                          'type'=>'view',
                          'name'=>"淘宝",
                          'url'=>"https://www.taobao.com"
-                     ]
+                     ],
+                     [
+                         'type'=>'view',
+                         'name'=>"项目",
+                         'url'=>"http://weixin.lixuetao.icu/'.'/web_auth"
+                     ],
+
                  ]
              ]
 

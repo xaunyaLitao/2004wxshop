@@ -88,3 +88,8 @@ Route::prefix('/wx')->group(function(){
     Route::get('/create_menus','WxController@createMenus');
 });
 
+//微信授权页面
+Route::get('/web_auth','TestController@wxWebAuth');
+
+//微信重定向跳转地址
+Route::get('/web_redirect','TestController@WebRedirect');
