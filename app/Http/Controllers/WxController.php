@@ -409,44 +409,44 @@ class WxController extends Controller
      * @param $content
      * @return string
      */
-    public function  subscribe(){
-
-        $ToUserName=$this->xml_obj->FromUserName;       // openid
-        $FromUserName=$this->xml_obj->ToUserName;
-        //检查用户是否存在
-        $u = WxUserModel::where(['openid'=>$ToUserName])->first();
-        if($u)
-        {
-            // TODO 用户存在
-            $content = "欢迎回来 现在时间是：" . date("Y-m-d H:i:s");
-        }else{
-            //获取用户信息，并入库
-            $user_info = $this->getWxUserInfo();
-
-            //入库
-            unset($user_info['subscribe']);
-            unset($user_info['remark']);
-            unset($user_info['groupid']);
-            unset($user_info['substagid_listcribe']);
-            unset($user_info['qr_scene']);
-            unset($user_info['qr_scene_str']);
-            unset($user_info['tagid_list']);
-
-            WxUserModel::insertGetId($user_info);
-            $content = "欢迎关注 现在时间是：" . date("Y-m-d H:i:s");
-
-        }
-
-        $xml="<xml>
-              <ToUserName><![CDATA[".$ToUserName."]]></ToUserName>
-              <FromUserName><![CDATA[".$FromUserName."]]></FromUserName>
-              <CreateTime>time()</CreateTime>
-              <MsgType><![CDATA[text]]></MsgType>
-              <Content><![CDATA[".$content."]]></Content>
-       </xml>";
-
-        return $xml;
-    }
+//    public function  subscribe(){
+//
+//        $ToUserName=$this->xml_obj->FromUserName;       // openid
+//        $FromUserName=$this->xml_obj->ToUserName;
+//        //检查用户是否存在
+//        $u = WxUserModel::where(['openid'=>$ToUserName])->first();
+//        if($u)
+//        {
+//            // TODO 用户存在
+//            $content = "欢迎回来 现在时间是：" . date("Y-m-d H:i:s");
+//        }else{
+//            //获取用户信息，并入库
+//            $user_info = $this->getWxUserInfo();
+//
+//            //入库
+//            unset($user_info['subscribe']);
+//            unset($user_info['remark']);
+//            unset($user_info['groupid']);
+//            unset($user_info['substagid_listcribe']);
+//            unset($user_info['qr_scene']);
+//            unset($user_info['qr_scene_str']);
+//            unset($user_info['tagid_list']);
+//
+//            WxUserModel::insertGetId($user_info);
+//            $content = "欢迎关注 现在时间是：" . date("Y-m-d H:i:s");
+//
+//        }
+//
+//        $xml="<xml>
+//              <ToUserName><![CDATA[".$ToUserName."]]></ToUserName>
+//              <FromUserName><![CDATA[".$FromUserName."]]></FromUserName>
+//              <CreateTime>time()</CreateTime>
+//              <MsgType><![CDATA[text]]></MsgType>
+//              <Content><![CDATA[".$content."]]></Content>
+//       </xml>";
+//
+//        return $xml;
+//    }
 
     /**
      * 创建自定义菜单
