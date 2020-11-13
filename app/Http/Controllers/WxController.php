@@ -107,7 +107,7 @@ class WxController extends Controller
                         if ($user_id) {
                             $user_id->subscribe = 1;
                             $user_id->save();
-                            $content = "谢谢再次回来,为您提供个更好的服务！";
+                            $content = "谢谢再次关注,为您提供个更好的服务！";
                         } else {
                             $res = [
                                 "subscribe" => $user['subscribe'],
