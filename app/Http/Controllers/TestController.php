@@ -222,7 +222,7 @@ class TestController extends Controller
 
 
     public function wxWebAuth(){
-        $redirect='http://weixin.lixuetao.icu/'.'/web_redirect';
+        $redirect='http://weixin.lixuetao.icu/web_auth'.'/web_redirect';
 
         $url="https://open.weixin.qq.com/connect/oauth2/authorize?appid=".env('WX_APPID')."&redirect_uri=".$redirect."&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect";
         dd($url);
