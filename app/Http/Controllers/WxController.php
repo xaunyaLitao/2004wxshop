@@ -85,6 +85,10 @@ class WxController extends Controller
             }
         }
 
+             // 图文
+            if($obj->EventKey == "Tao"){
+                $this->tuwen();
+            }
 
 
         switch ($obj->MsgType) {
@@ -622,6 +626,27 @@ class WxController extends Controller
 
     }
 
+// 回复图文
+public function tuwen(){
+    $title="阿龟";
+    $description="长方形固体瞬间移动工程,月薪过万";
+    $xml="<xml>
+  <ToUserName><![CDATA[%s]]></ToUserName>
+  <FromUserName><![CDATA[%s]]></FromUserName>
+  <CreateTime>%s</CreateTime>
+  <MsgType><![CDATA[news]]></MsgType>
+  <ArticleCount>%s</ArticleCount>
+  <Articles>
+    <item>
+      <Title><![CDATA[$title]]></Title>
+      <Description><![CDATA[$description]]></Description>
+      <PicUrl><![CDATA[picurl]]></PicUrl>
+      <Url><![CDATA[url]]></Url>
+    </item>
+  </Articles>
+</xml>";
+}
+
 
     //    创建自定义菜单
     public function createMenus(){
@@ -642,7 +667,12 @@ class WxController extends Controller
                             'type'=>'view',
                             'name'=>'拼多多',
                             'url'=>"https://www.pinduoduo.com"
-                        ]
+                        ],
+                        [
+                            'type'=>'click',
+                            'name'=>'今日推荐',
+                            'key'=>"Tao"
+                        ],
                 ]
                ],
 
@@ -661,6 +691,7 @@ class WxController extends Controller
                         'name'  =>'京东',
                         'url'   =>'https://www.jd.com'
                     ]
+
                 ]
             ],
 
@@ -676,11 +707,10 @@ class WxController extends Controller
                          'type'=>'view',
                          'name'=>"项目",
                          'url'=>"http://weixin.lixuetao.icu/'.'/web_auth"
-                     ],
-
+                     ]
                  ]
-             ]
 
+             ]
 
             ]
         ];
@@ -697,5 +727,10 @@ class WxController extends Controller
     }
 
 
+//    客服
+    public function kefu(){
+        $token=$this->get_access_token();
+        $url="https://api.weixin.qq.com/customservice/kfaccount/add?access_token=".$token;
+    }
 
 }

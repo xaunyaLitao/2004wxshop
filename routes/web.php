@@ -86,7 +86,9 @@ Route::prefix('/wx')->group(function(){
     Route::get('/upload_media','WxController@uploadMedia');        //上传素材
     Route::get('/send_all','WxController@sendAll');         //群发消息
     Route::get('/create_menus','WxController@createMenus');
+    Route::get('/kefu','WxController@kefu');
 });
+
 
 //微信授权页面
 Route::get('/web_auth','TestController@wxWebAuth');
