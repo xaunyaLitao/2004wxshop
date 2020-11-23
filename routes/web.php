@@ -95,3 +95,21 @@ Route::get('/web_auth','TestController@wxWebAuth');
 
 //微信重定向跳转地址
 Route::get('/web_redirect','TestController@WebRedirect');
+
+
+
+Route::prefix('/api')->group(function(){
+    Route::get('/test','ApiController@test1');
+    Route::any('/goods','ApiController@goods');
+});
+
+
+
+// 微信小程序
+Route::prefix('/xcx')->group(function(){
+    Route::any('/home-login','XcxController@Homelogin');   // 登录
+    Route::get('/test','XcxController@tests');   // 练习
+    Route::get('/detail','XcxController@detail');   // 商品详情
+    Route::get('/cart','XcxController@cart');   // 商品购物车
+    Route::any('/user-login','XcxController@userLogin');   // 登录
+});
