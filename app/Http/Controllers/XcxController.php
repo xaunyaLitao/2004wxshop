@@ -6,6 +6,7 @@ use App\Model\IndexModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use App\Model\XcxModel;
+use App\Model\XcxCartModel;
 class XcxController extends Controller
 {
     public function Homelogin(Request $request){
@@ -136,9 +137,35 @@ class XcxController extends Controller
     }
 
 
-    public function cart(){
-        echo '<pre>';print_r($_POST);echo '</pre>';
-        echo '<pre>';print_r($_GET);echo '</pre>';
+    public function addcart(Request $request){
+        $goods_id=$request->post("goodsid");
+        $uid=$_SERVER['uid'];
+
+//        查询商品的价格
+        $price=IndexModel::find($goods_id)->goods_price;
+
+        //  将商品存储数据库购物车表 或redis
+
+        $info=[
+            'goods_id'=>$goods_id,
+            'uid'=>$uid,
+            'goods_number'=>1,
+            'add_time'=>time(),
+            'cart_price'=>$price
+        ];
+        $tao=XcxCartModel::insertGetId($info);
+        if($tao){
+            $response=[
+                'errno'=>0,
+                'msg'=>'ok'
+            ];
+        }else{
+            $response=[
+                'errno'=>50002,
+                'msg'=>'加入购物车失败'
+            ];
+        }
+        return $response;
     }
 
 }

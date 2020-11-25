@@ -110,6 +110,6 @@ Route::prefix('/xcx')->group(function(){
     Route::any('/home-login','XcxController@Homelogin');   // 登录
     Route::get('/test','XcxController@tests');   // 练习
     Route::get('/detail','XcxController@detail');   // 商品详情
-    Route::post('/cart','XcxController@cart');   // 商品购物车
+    Route::any('/cart','XcxController@addcart')->middleware('check.token');  // 加入购物车
     Route::any('/user-login','XcxController@userLogin');   // 登录
 });

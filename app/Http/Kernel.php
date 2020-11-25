@@ -65,7 +65,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'check.login' => CheckLogin::class,
         'log.page-view' => LogPageview::class,     //记录访问记录
-
+        'check.token'=> \App\Http\Middleware\CheckToken::class,   // 验证token
     ];
 
     /**
