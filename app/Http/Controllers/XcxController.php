@@ -137,16 +137,8 @@ class XcxController extends Controller
 
 
     public function cart(){
-        $goods_id=Request()->get("goods_id");
-        $cart=IndexModel::select("goods_img","goods_name","goods_price","goods_id")->where("goods_id",$goods_id)->first()->toArray();
-
-        $arrays=[
-            "goods_name"=>$cart['goods_name'],
-            "goods_price"=>$cart["goods_price"],
-            "goods_img"=>$cart['goods_img'],
-            "goods_id"=>$cart["goods_id"]
-        ];
-        return $arrays;
+        echo '<pre>';print_r($_POST);echo '</pre>';
+        echo '<pre>';print_r($_GET);echo '</pre>';
     }
 
 }

@@ -21,6 +21,7 @@ class VerifyCsrfToken extends Middleware
     protected $except = [
         '/wx',
         '/xcx/home-login',
-        '/xcx/user-login'
+        '/xcx/user-login',
+        '/xcx/cart'
     ];
 }
