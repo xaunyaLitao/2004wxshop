@@ -112,4 +112,6 @@ Route::prefix('/xcx')->group(function(){
     Route::get('/detail','XcxController@detail');   // 商品详情
     Route::any('/cart','XcxController@addcart')->middleware('check.token');  // 加入购物车
     Route::any('/user-login','XcxController@userLogin');   // 登录
+    Route::any('/cartlist','XcxController@cartlist')->middleware('check.token');   // 购物车列表
+    Route::any('/add-fav','XcxController@addfav')->middleware('check.token');   // 商品收藏
 });

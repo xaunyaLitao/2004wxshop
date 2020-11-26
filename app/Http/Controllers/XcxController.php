@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use App\Model\XcxModel;
 use App\Model\XcxCartModel;
+use Illuminate\Support\Facades\DB;
 class XcxController extends Controller
 {
     public function Homelogin(Request $request){
@@ -143,6 +144,7 @@ class XcxController extends Controller
 
 //        查询商品的价格
         $price=IndexModel::find($goods_id)->goods_price;
+        $goods_name=IndexModel::find($goods_id)->goods_name;
 
         //  将商品存储数据库购物车表 或redis
 
@@ -151,21 +153,79 @@ class XcxController extends Controller
             'uid'=>$uid,
             'goods_number'=>1,
             'add_time'=>time(),
-            'cart_price'=>$price
+            'cart_price'=>$price,
+            'goods_name'=>$goods_name
         ];
-        $tao=XcxCartModel::insertGetId($info);
-        if($tao){
+
+        $ress=XcxCartModel::where(['goods_id'=>$goods_id,'uid'=>$uid])->first();
+        if($ress){
+//            如果存在就累加购买数量
+            DB::table('xcx_cart')->where('goods_id',$goods_id)->increment('goods_number');
             $response=[
-                'errno'=>0,
-                'msg'=>'ok'
+                'errno'=>400001,
+                'msg'=>'累加成功'
             ];
+            return $response;
         }else{
-            $response=[
-                'errno'=>50002,
-                'msg'=>'加入购物车失败'
-            ];
+            $tao=XcxCartModel::insertGetId($info);
+            if($tao){
+                $response=[
+                    'errno'=>0,
+                    'msg'=>'ok'
+                ];
+            }else{
+                $response=[
+                    'errno'=>50002,
+                    'msg'=>'加入购物车失败'
+                ];
+            }
+            return $response;
         }
+    }
+
+
+//    小程序购物车展示
+    public function cartlist(Request $request){
+        $uid=$_SERVER['uid'];
+        $goods = XcxCartModel::where(['uid'=>$uid])->get();
+        if($goods)      //购物车有商品
+        {
+            $goods = $goods->toArray();
+            foreach($goods as $k=>&$v)
+            {
+                $g = IndexModel::select("goods_img","goods_name")->find($v['goods_id']);
+                $v['goods_name'] = $g->goods_name;
+                $v['goods_img']=explode(",",$g['goods_img']);
+            }
+        }else{          //购物车无商品
+            $goods = [];
+        }
+
+        //echo '<pre>';print_r($goods);echo '</pre>';die;
+        $response = [
+            'errno' => 0,
+            'msg'   => 'ok',
+            'data'  => [
+                'list'  => $goods
+            ]
+        ];
+
         return $response;
     }
 
+//    商品收藏
+public function addfav(Request $request){
+    $goods_id = $request->get('id');
+    //加入收藏 Redis有序集合
+    $uid=$_SERVER['uid'];
+    $redis_key = 'ss:goods:fav:'.$uid;      // 用户收藏的商品有序集合
+    Redis::Zadd($redis_key,time(),$goods_id);       //将商品id加入有序集合，并给排序值
+
+    $response = [
+        'errno' => 0,
+        'msg'   => 'ok'
+    ];
+
+    return $response;
+}
 }
