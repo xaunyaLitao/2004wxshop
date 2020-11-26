@@ -141,7 +141,6 @@ class XcxController extends Controller
     public function addcart(Request $request){
         $goods_id=$request->post("goodsid");
         $uid=$_SERVER['uid'];
-
 //        查询商品的价格
         $price=IndexModel::find($goods_id)->goods_price;
         $goods_name=IndexModel::find($goods_id)->goods_name;
@@ -187,7 +186,7 @@ class XcxController extends Controller
 //    小程序购物车展示
     public function cartlist(Request $request){
         $uid=$_SERVER['uid'];
-        $goods = XcxCartModel::where(['uid'=>$uid])->get();
+        $goods = XcxCartModel::where('uid',$uid)->get();
         if($goods)      //购物车有商品
         {
             $goods = $goods->toArray();
