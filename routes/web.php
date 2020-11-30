@@ -104,14 +104,16 @@ Route::prefix('/api')->group(function(){
 });
 
 
+Route::any('/eve','XcxController@eve');   // 登录
 
 // 微信小程序
 Route::prefix('/xcx')->group(function(){
     Route::any('/home-login','XcxController@Homelogin');   // 登录
     Route::get('/test','XcxController@tests');   // 练习
     Route::get('/detail','XcxController@detail');   // 商品详情
-    Route::any('/cart','XcxController@addcart')->middleware('check.token');  // 加入购物车
     Route::any('/user-login','XcxController@userLogin');   // 登录
+    Route::any('/cart','XcxController@addcart')->middleware('check.token');  // 加入购物车
     Route::any('/cartlist','XcxController@cartlist')->middleware('check.token');   // 购物车列表
     Route::any('/add-fav','XcxController@addfav')->middleware('check.token');   // 商品收藏
+    Route::any('/cart-del','XcxController@cartdel')->middleware('check.token');   // 购物车商品删除
 });

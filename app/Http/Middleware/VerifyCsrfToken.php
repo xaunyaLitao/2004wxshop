@@ -22,6 +22,7 @@ class VerifyCsrfToken extends Middleware
         '/wx',
         '/xcx/home-login',
         '/xcx/user-login',
-        '/xcx/cart'
+        '/xcx/cart',
+        '/xcx/cart-del'
     ];
 }

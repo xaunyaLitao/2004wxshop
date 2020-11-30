@@ -118,12 +118,11 @@ class XcxController extends Controller
     }
 
 
-
-
     public function tests(){
         return view('xcx.test');
     }
 
+//    小程序商品详情
     public function detail(){
         $goods_id=Request()->get("goods_id");
         $detail=IndexModel::select("goods_img","goods_name","goods_price","goods_imgs","goods_id")->where("goods_id",$goods_id)->first()->toArray();
@@ -138,58 +137,67 @@ class XcxController extends Controller
     }
 
 
+//    小程序加入购物车
     public function addcart(Request $request){
-        $goods_id=$request->post("goodsid");
-        $uid=$_SERVER['uid'];
-//        查询商品的价格
-        $price=IndexModel::find($goods_id)->goods_price;
-        $goods_name=IndexModel::find($goods_id)->goods_name;
+        $goods_id = $request->post('goodsid');
+        $uid = $_SERVER['uid'];
 
-        //  将商品存储数据库购物车表 或redis
+        //查询商品的价格
+        $price = IndexModel::find($goods_id)->shop_price;
 
-        $info=[
-            'goods_id'=>$goods_id,
-            'uid'=>$uid,
-            'goods_number'=>1,
-            'add_time'=>time(),
-            'cart_price'=>$price,
-            'goods_name'=>$goods_name
-        ];
-
-        $ress=XcxCartModel::where(['goods_id'=>$goods_id,'uid'=>$uid])->first();
-        if($ress){
-//            如果存在就累加购买数量
-            DB::table('xcx_cart')->where('goods_id',$goods_id)->increment('goods_number');
-            $response=[
-                'errno'=>400001,
-                'msg'=>'累加成功'
+        //判断购物车中商品你是否已存在
+        $g = XcxCartModel::where(['goods_id'=>$goods_id])->first();
+        if($g)      //增加商品数量
+        {
+            XcxCartModel::where(['goods_id'=>$goods_id])->increment('goods_number');
+            $response = [
+                'errno' => 0,
+                'msg'   => 'ok'
             ];
-            return $response;
         }else{
-            $tao=XcxCartModel::insertGetId($info);
-            if($tao){
-                $response=[
-                    'errno'=>0,
-                    'msg'=>'ok'
+            //将商品存储购物车表 或 Redis
+            $info = [
+                'goods_id'  => $goods_id,
+                'uid'       => $uid,
+                'goods_number' => 1,
+                'add_time'  => time(),
+                'cart_price' => $price
+            ];
+
+            $id = CartModel::insertGetId($info);
+            if($id)
+            {
+                $response = [
+                    'errno' => 0,
+                    'msg'   => 'ok'
                 ];
             }else{
-                $response=[
-                    'errno'=>50002,
-                    'msg'=>'加入购物车失败'
+                $response = [
+                    'errno' => 50002,
+                    'msg'   => '加入购物车失败'
                 ];
             }
-            return $response;
         }
+
+
+
+
+        return $response;
     }
 
 
-//    小程序购物车展示
+//    小程序购物车列表
     public function cartlist(Request $request){
+//        接收uid
         $uid=$_SERVER['uid'];
+//        查询购物车表中 是否有这个用户
         $goods = XcxCartModel::where('uid',$uid)->get();
         if($goods)      //购物车有商品
         {
             $goods = $goods->toArray();
+
+
+
             foreach($goods as $k=>&$v)
             {
                 $g = IndexModel::select("goods_img","goods_name")->find($v['goods_id']);
@@ -212,6 +220,7 @@ class XcxController extends Controller
         return $response;
     }
 
+
 //    商品收藏
 public function addfav(Request $request){
     $goods_id = $request->get('id');
@@ -226,5 +235,33 @@ public function addfav(Request $request){
     ];
 
     return $response;
+}
+
+
+    public function eve(){
+        return view('test.eve');
+    }
+
+
+//    购物车商品删除
+public function cartdel(Request $request){
+    $goods_id = $request->post('goods');
+    $goods_arr =  explode(',',$goods_id);
+
+    $res = XcxCartModel::whereIn('goods_id',$goods_arr)->delete();
+    if($res)        //删除成功
+    {
+        $response = [
+            'errno' => 0,
+            'msg'   => 'ok'
+        ];
+    }else{
+        $response = [
+            'errno' => 500002,
+            'msg'   => '内部错误'
+        ];
+    }
+    return $response;
+
 }
 }
