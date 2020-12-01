@@ -140,10 +140,11 @@ class XcxController extends Controller
 //    小程序加入购物车
     public function addcart(Request $request){
         $goods_id = $request->post('goodsid');
+//        dd($goods_id);die;
         $uid = $_SERVER['uid'];
 
         //查询商品的价格
-        $price = IndexModel::find($goods_id)->shop_price;
+        $price = IndexModel::find($goods_id)->goods_price;
 
         //判断购物车中商品你是否已存在
         $g = XcxCartModel::where(['goods_id'=>$goods_id])->first();
@@ -164,7 +165,7 @@ class XcxController extends Controller
                 'cart_price' => $price
             ];
 
-            $id = CartModel::insertGetId($info);
+            $id = XcxCartModel::insertGetId($info);
             if($id)
             {
                 $response = [
@@ -195,7 +196,6 @@ class XcxController extends Controller
         if($goods)      //购物车有商品
         {
             $goods = $goods->toArray();
-
 
 
             foreach($goods as $k=>&$v)
