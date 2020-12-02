@@ -116,4 +116,5 @@ Route::prefix('/xcx')->group(function(){
     Route::get('/cartlist','XcxController@cartlist')->middleware('check.token');   // 购物车列表
     Route::get('/add-fav','XcxController@addfav')->middleware('check.token');   // 商品收藏
     Route::post('/cart-del','XcxController@cartdel')->middleware('check.token');   // 购物车商品删除
+    Route::any('/tianqi','XcxController@citytest');   // 天气
 });

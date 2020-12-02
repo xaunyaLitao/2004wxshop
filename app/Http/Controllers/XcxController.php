@@ -264,4 +264,14 @@ public function cartdel(Request $request){
     return $response;
 
 }
+
+
+//    天气测试
+    public function citytest(){
+        $value = request()->value;
+        $url='https://v0.yiketianqi.com/api?version=v9&appid='.env('WX_TQ_APPID').'&appsecret='.env('WX_TQ_SECET').'&city='.$value;
+        $li=file_get_contents($url);
+        $bb=json_decode($li,true);
+        return $bb;
+    }
 }
